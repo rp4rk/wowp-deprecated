@@ -1,0 +1,1 @@
+export { parseLog } from "./parser";
