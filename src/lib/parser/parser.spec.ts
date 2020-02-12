@@ -56,6 +56,13 @@ describe("LogDateTimeParser", () => {
       expect(milliseconds).toBe(150);
     }
   });
+
+  it("can handle single digit dates", () => {
+    const dateTimeString = "2/1 01:45:30.150";
+    const result = P.LogDateTimeParser.parse(dateTimeString);
+
+    expect(result.status).toBe(true);
+  });
 });
 
 describe("EmoteParser", () => {

@@ -8,7 +8,7 @@ import { matchEvent } from "./combatLogEvents";
 /**
  * Parses the day and month from a log line
  */
-export const LogEntryDateParser: P.Parser<number[]> = P.regexp(/\d{2}\/\d{2}/).map(x => {
+export const LogEntryDateParser: P.Parser<number[]> = P.regexp(/\d{1,}\/\d{1,}/).map(x => {
   const [month, day] = x.split("/");
   return [+month, +day];
 });
@@ -110,7 +110,6 @@ export function parseLog(path: string) {
   console.time("Parsing");
   return fromEvent<string>(rd, "line").pipe(
     map((i: string) => {
-      if (i === "") return;
       const parsedLine = LogLineParser.parse(i);
 
       if (!parsedLine.status) {
@@ -120,10 +119,6 @@ export function parseLog(path: string) {
 
       return parsedLine.value;
     }),
-    filter<any>(Boolean),
-    // distinct(line => line[1]),
-    map(matchEvent),
-    groupBy(i => i.type)
-    // distinct(p => p.type)
+    map(matchEvent)
   );
 }
