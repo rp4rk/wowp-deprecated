@@ -88,17 +88,15 @@ export const BracketCellParser: P.Parser<(string | null)[]> = P.lazy(() => {
  */
 export const LogLineParser: P.Parser<[Date, ...string[]]> = P.seqMap(
   LogDateTimeParser,
-  P.whitespace,
-  P.alt(BracketCellParser, SquareBracketParser, Cell).sepBy1(P.string(",")),
+  P.whitespace.then(P.alt(BracketCellParser, SquareBracketParser, Cell).sepBy1(P.string(","))),
   function handleLogLineResult(...args) {
-    return [args[0], ...args[2]];
+    return [args[0], ...args[1]];
   }
 );
 
 /**
  * Parses a log into a log object
  * @param path Path to a WoWCombatLog.txt file
- * @returns nothing yet
  */
 export function parseLog(path: string) {
   const rd = readline.createInterface({

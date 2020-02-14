@@ -4,5 +4,5 @@ import { parseLog } from "./lib/parser";
 const results = fs.createWriteStream("./results.json");
 
 parseLog("./WoWCombatLog.txt").subscribe(e => {
-  results.write(JSON.stringify(e));
+  results.write(JSON.stringify(e) + "\n");
 });
