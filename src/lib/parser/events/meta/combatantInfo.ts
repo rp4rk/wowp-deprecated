@@ -1,4 +1,4 @@
-import { MatcherConfig } from "lib/parser/matcher";
+import { MatcherConfig, matcher } from "lib/parser/matcher";
 import { CombatLogEventBase, CombatLogEventTypes, BASE_MATCHERS } from "lib/parser/events/base";
 
 export interface CombatLogCombatantInfoEvent extends CombatLogEventBase {
@@ -63,4 +63,4 @@ const CombatLogCombatantInfoMatcher: MatcherConfig<CombatLogCombatantInfoEvent>[
   { label: "misc", index: 28 }
 ];
 
-export default CombatLogCombatantInfoMatcher;
+export default matcher(CombatLogCombatantInfoMatcher);

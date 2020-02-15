@@ -1,4 +1,4 @@
-import { MatcherConfig } from "lib/parser/matcher";
+import { MatcherConfig, matcher } from "lib/parser/matcher";
 
 export enum CombatLogEventTypes {
   COMBAT_LOG_VERSION = "COMBAT_LOG_VERSION",
@@ -60,3 +60,5 @@ export const BASE_MATCHERS: MatcherConfig<CombatLogEventBase>[] = [
   { label: "date", index: 0 },
   { label: "type", index: 1 }
 ];
+
+export default matcher(BASE_MATCHERS);

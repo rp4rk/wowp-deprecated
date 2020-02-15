@@ -1,1 +1,1 @@
-export { default as CombatLogCastEvent } from "./cast";
+export { default as CombatLogCastEventMatcher } from "./cast";

@@ -1,4 +1,4 @@
-import { MatcherConfig } from "lib/parser/matcher";
+import { MatcherConfig, matcher } from "lib/parser/matcher";
 import { CombatLogEventBase, CombatLogEventTypes, BASE_MATCHERS } from "lib/parser/events/base";
 
 export interface CombatLogVersionEvent extends CombatLogEventBase {
@@ -14,4 +14,4 @@ const CombatLogVersionMatcher: MatcherConfig<CombatLogVersionEvent>[] = [
   { label: "buildVersion", index: 7 }
 ];
 
-export default CombatLogVersionMatcher;
+export default matcher(CombatLogVersionMatcher);

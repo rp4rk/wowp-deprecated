@@ -1,4 +1,4 @@
-import { MatcherConfig } from "lib/parser/matcher";
+import { MatcherConfig, matcher } from "lib/parser/matcher";
 import { CombatLogEventBase, CombatLogEventTypes, BASE_MATCHERS } from "lib/parser/events/base";
 
 export interface SpellCastSuccessEvent extends CombatLogEventBase {
@@ -39,4 +39,4 @@ const CombatLogSpellCastSuccessMatcher: MatcherConfig<SpellCastSuccessEvent>[] =
   }
 ];
 
-export default CombatLogSpellCastSuccessMatcher;
+export default matcher(CombatLogSpellCastSuccessMatcher);

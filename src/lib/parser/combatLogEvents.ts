@@ -1,8 +1,6 @@
 import { CombatLogEventTypes } from "lib/parser/events/base";
 import { CombatLogEvent } from "lib/parser/events/index.types";
-import { MatcherConfig, matcher } from "./matcher";
-
-import CombatLogEventMatchers from "./events/index";
+import CombatLogEventMatchers from "lib/parser/events";
 
 /**
  * Matches raw event arrays to a CombatLogEvent
@@ -17,16 +15,14 @@ export function matchEvent(event: [Date, ...string[]]): Partial<CombatLogEvent> 
 
   switch (type) {
     case CombatLogEventTypes.COMBAT_LOG_VERSION:
-      return matcher<CombatLogVersionEvent>(CombatLogVersionMatcher)(event);
-    case CombatLogEventTypes.ENCOUNTER_START:
-      return matcher<CombatLogEncounterEvent>(CombatLogEncounterMatcher)(event);
-    case CombatLogEventTypes.ENCOUNTER_END:
-      return matcher<CombatLogEncounterEvent>(CombatLogEncounterMatcher)(event);
+      return CombatLogEventMatchers.CombatLogVersionMatcher(event);
+    case (CombatLogEventTypes.ENCOUNTER_START, CombatLogEventTypes.ENCOUNTER_END):
+      return CombatLogEventMatchers.CombatLogEncounterMatcher(event);
     case CombatLogEventTypes.COMBATANT_INFO:
-      return matcher<CombatLogCombatantInfoEvent>(CombatLogCombatantInfoMatcher)(event);
+      return CombatLogEventMatchers.CombatLogCombatantInfoMatcher(event);
     case CombatLogEventTypes.SPELL_CAST_SUCCESS:
-      return matcher<SpellCastSuccessEvent>(CombatLogSpellCastSuccessMatcher)(event);
+      return CombatLogEventMatchers.CombatLogCastEventMatcher(event);
     default:
-      return matcher<CombatLogEvent>(BASE_MATCHERS)(event);
+      return CombatLogEventMatchers.CombatLogBaseEvent(event);
   }
 }

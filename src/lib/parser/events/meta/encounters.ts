@@ -1,4 +1,4 @@
-import { MatcherConfig } from "lib/parser/matcher";
+import { MatcherConfig, matcher } from "lib/parser/matcher";
 import { CombatLogEventBase, CombatLogEventTypes, BASE_MATCHERS } from "lib/parser/events/base";
 
 export interface CombatLogEncounterEvent extends CombatLogEventBase {
@@ -8,11 +8,11 @@ export interface CombatLogEncounterEvent extends CombatLogEventBase {
   encounterDifficulty: number;
 }
 
-export const CombatLogEncounterMatcher: MatcherConfig<CombatLogEncounterEvent>[] = [
+const CombatLogEncounterMatcher: MatcherConfig<CombatLogEncounterEvent>[] = [
   ...BASE_MATCHERS,
   { label: "encounterId", index: 2 },
   { label: "encounterName", index: 3 },
   { label: "encounterDifficulty", index: 4 }
 ];
 
-export default CombatLogEncounterMatcher;
+export default matcher(CombatLogEncounterMatcher);
