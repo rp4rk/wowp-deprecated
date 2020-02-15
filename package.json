@@ -7,7 +7,7 @@
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "test": "jest"
   },
-  "author": "",
+  "author": "Ryan Park",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^24.0.25",

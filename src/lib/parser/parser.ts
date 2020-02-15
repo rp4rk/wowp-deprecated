@@ -65,12 +65,19 @@ export const Cell: P.Parser<string | null | number> = P.alt(
   const num = Number(item);
   if (!Number.isNaN(num)) return num;
 
-  return item;
+  const pruned = item.indexOf('"') === 0 ? item.replace(/\"/g, "") : item;
+
+  return pruned;
 });
+
+export const EscapedCell: P.Parser<string> = P.noneOf('"')
+  .many()
+  .tie()
+  .wrap(P.string('"'), P.string('"'));
 
 export const SquareBracketParser: P.Parser<(string | null)[]> = P.lazy(() => {
   return P.regex(/\[/)
-    .then(P.alt(SquareBracketParser, BracketCellParser, Cell).sepBy(P.string(",")))
+    .then(P.alt(SquareBracketParser, BracketCellParser, EscapedCell, Cell).sepBy(P.string(",")))
     .skip(P.regex(/\]/));
 });
 
@@ -79,7 +86,7 @@ export const SquareBracketParser: P.Parser<(string | null)[]> = P.lazy(() => {
  */
 export const BracketCellParser: P.Parser<(string | null)[]> = P.lazy(() => {
   return P.regex(/\(/)
-    .then(P.alt(BracketCellParser, SquareBracketParser, Cell).sepBy(P.string(",")))
+    .then(P.alt(BracketCellParser, SquareBracketParser, EscapedCell, Cell).sepBy(P.string(",")))
     .skip(P.regex(/\)/));
 });
 
@@ -88,9 +95,10 @@ export const BracketCellParser: P.Parser<(string | null)[]> = P.lazy(() => {
  */
 export const LogLineParser: P.Parser<[Date, ...string[]]> = P.seqMap(
   LogDateTimeParser,
-  P.whitespace.then(P.alt(BracketCellParser, SquareBracketParser, Cell).sepBy1(P.string(","))),
+  P.whitespace,
+  P.alt(BracketCellParser, SquareBracketParser, EscapedCell, Cell).sepBy1(P.string(",")),
   function handleLogLineResult(...args) {
-    return [args[0], ...args[1]];
+    return [args[0], ...args[2]];
   }
 );
 
@@ -106,12 +114,16 @@ export function parseLog(path: string) {
   rd.on("close", () => console.timeEnd("Parsing"));
 
   console.time("Parsing");
+
   return fromEvent<string>(rd, "line").pipe(
     map((i: string) => {
+      // if (i === "") return;
       const parsedLine = LogLineParser.parse(i);
 
       if (!parsedLine.status) {
+        console.log(parsedLine);
         console.log(parsedLine.index);
+        console.log(i);
         throw new Error("Could not parse combat log.");
       }
 
